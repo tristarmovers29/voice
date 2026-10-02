@@ -2,18 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>Email Reply Assistant</title>
-
-  <meta
-    name="description"
-    content="Voice powered professional email reply assistant."
-  >
+  <title>Voice to English | Email Reply Assistant</title>
 
   <style>
     * {
@@ -22,25 +13,11 @@
 
     body {
       margin: 0;
-      font-family:
-        Inter,
-        Arial,
-        Helvetica,
-        sans-serif;
-
+      font-family: Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(
-          circle at top right,
-          rgba(212, 175, 55, 0.14),
-          transparent 30%
-        ),
-        linear-gradient(
-          135deg,
-          #07111f,
-          #0c1728 55%,
-          #050b14
-        );
-
+        radial-gradient(circle at top left, rgba(212,175,55,.12), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(0,120,255,.10), transparent 30%),
+        #07111f;
       color: #ffffff;
       min-height: 100vh;
     }
@@ -48,288 +25,233 @@
     .container {
       width: min(1100px, 94%);
       margin: auto;
-      padding: 35px 0 50px;
+      padding: 30px 0 50px;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 8px 16px;
-      border: 1px solid rgba(212,175,55,.45);
-      border-radius: 30px;
-      color: #e7c766;
-      font-size: 13px;
-      letter-spacing: 1px;
-      margin-bottom: 15px;
-    }
-
-    h1 {
+    .header h1 {
       margin: 0;
-      font-size: clamp(32px, 6vw, 56px);
-      line-height: 1.05;
-
-      background:
-        linear-gradient(
-          90deg,
-          #ffffff,
-          #e6c45d
-        );
-
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 34px;
+      color: #f3c94b;
     }
 
-    .subtitle {
-      margin: 14px auto 0;
-      max-width: 720px;
-      color: #aeb9c9;
-      font-size: 16px;
-      line-height: 1.6;
+    .header p {
+      margin: 10px 0 0;
+      color: #b9c5d6;
+      font-size: 15px;
     }
 
-    .card {
-      background:
-        linear-gradient(
-          145deg,
-          rgba(18, 32, 52, .94),
-          rgba(8, 17, 29, .94)
-        );
-
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 22px;
-      padding: 24px;
+    .tabs {
+      display: flex;
+      gap: 12px;
       margin-bottom: 22px;
-
-      box-shadow:
-        0 25px 70px rgba(0,0,0,.28);
-    }
-
-    .card-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 14px;
-    }
-
-    .card-title h2 {
-      margin: 0;
-      font-size: 20px;
-      color: #f1d273;
-    }
-
-    .step {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-
-      display: flex;
-      align-items: center;
       justify-content: center;
-
-      background: rgba(212,175,55,.13);
-      border: 1px solid rgba(212,175,55,.4);
-      color: #e7c766;
-      font-weight: bold;
-      flex-shrink: 0;
-    }
-
-    textarea {
-      width: 100%;
-      resize: vertical;
-      min-height: 190px;
-
-      padding: 17px;
-
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.1);
-
-      background: #07111e;
-      color: #ffffff;
-
-      font-size: 16px;
-      line-height: 1.6;
-
-      outline: none;
-    }
-
-    textarea:focus {
-      border-color: rgba(212,175,55,.65);
-      box-shadow:
-        0 0 0 3px rgba(212,175,55,.08);
-    }
-
-    textarea::placeholder {
-      color: #6f7d90;
-    }
-
-    .voice-area {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .voice-controls {
-      display: flex;
       flex-wrap: wrap;
+    }
+
+    .tab {
+      border: 1px solid #39485c;
+      background: #101d2d;
+      color: #dce5ef;
+      padding: 13px 24px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      transition: .2s;
+    }
+
+    .tab:hover {
+      border-color: #f3c94b;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #d9ae32, #f3d56b);
+      color: #07111f;
+      border-color: #f3c94b;
+    }
+
+    .panel {
+      display: none;
+      background: rgba(13, 27, 43, .96);
+      border: 1px solid #26384d;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 15px 45px rgba(0,0,0,.28);
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      color: #f3c94b;
+      font-size: 23px;
+    }
+
+    .panel-description {
+      color: #aebccc;
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 8px;
+      color: #f1f5f9;
+      font-weight: bold;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      border: 1px solid #34485e;
+      background: #081523;
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      outline: none;
+      resize: vertical;
+    }
+
+    textarea:focus,
+    input:focus {
+      border-color: #f3c94b;
+      box-shadow: 0 0 0 2px rgba(243,201,75,.10);
+    }
+
+    #voiceEnglishInput {
+      min-height: 140px;
+    }
+
+    #englishOutput {
+      min-height: 180px;
+    }
+
+    #emailInput {
+      min-height: 180px;
+    }
+
+    #voiceInput {
+      min-height: 130px;
+    }
+
+    #emailOutput {
+      min-height: 260px;
+    }
+
+    .button-row {
+      display: flex;
       gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
     }
 
     button {
-      border: 0;
-      border-radius: 12px;
-      padding: 13px 19px;
-
-      font-size: 15px;
-      font-weight: 600;
-
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: bold;
       cursor: pointer;
-      transition: .2s ease;
+      transition: .2s;
     }
 
-    button:hover {
+    .primary {
+      background: linear-gradient(135deg, #d9ae32, #f3d56b);
+      color: #07111f;
+    }
+
+    .primary:hover {
       transform: translateY(-1px);
     }
 
-    .voice-btn {
-      background:
-        linear-gradient(
-          135deg,
-          #d4af37,
-          #f0d778
-        );
-
-      color: #101722;
-    }
-
-    .voice-btn.recording {
-      background: #c94a4a;
-      color: #ffffff;
-      animation: pulse 1.2s infinite;
-    }
-
-    @keyframes pulse {
-      50% {
-        box-shadow:
-          0 0 0 9px rgba(201,74,74,.12);
-      }
-    }
-
     .secondary {
-      background: #162438;
-      color: #dce5f0;
-      border: 1px solid rgba(255,255,255,.08);
+      background: #17283b;
+      border: 1px solid #3a4e65;
+      color: #ffffff;
     }
 
-    .generate {
-      width: 100%;
-      padding: 16px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #d4af37,
-          #f0d778
-        );
-
-      color: #101722;
-      font-size: 17px;
+    .secondary:hover {
+      border-color: #f3c94b;
     }
 
-    .generate:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-      transform: none;
+    .danger {
+      background: #401d25;
+      border: 1px solid #743441;
+      color: #ffd9df;
+    }
+
+    .mic-active {
+      background: #a52b3c !important;
+      color: white !important;
+      border-color: #d95768 !important;
     }
 
     .status {
-      min-height: 24px;
       margin-top: 14px;
-      text-align: center;
-      color: #aeb9c9;
+      min-height: 22px;
+      color: #aebccc;
       font-size: 14px;
     }
 
-    .error {
-      color: #ff8d8d;
+    .status.success {
+      color: #76df9a;
     }
 
-    .success {
-      color: #88e2ae;
+    .status.error {
+      color: #ff8d9d;
     }
 
-    .subject {
-      margin-bottom: 15px;
+    .result-box {
+      margin-top: 22px;
+      border-top: 1px solid #293c50;
+      padding-top: 20px;
     }
 
-    .subject-label {
-      display: block;
-      color: #9baabd;
-      font-size: 13px;
-      margin-bottom: 7px;
-      text-transform: uppercase;
-      letter-spacing: .7px;
-    }
-
-    .subject-box {
-      width: 100%;
-      padding: 15px;
-
-      background: #07111e;
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 12px;
-
-      color: #ffffff;
-      font-size: 16px;
-      outline: none;
-    }
-
-    .output {
-      min-height: 310px;
-    }
-
-    .bottom-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .tip {
-      margin-top: 12px;
-      color: #7e8da2;
-      font-size: 13px;
+    .small-note {
+      margin-top: 8px;
+      color: #8fa0b4;
+      font-size: 12px;
       line-height: 1.5;
     }
 
     .footer {
       text-align: center;
-      color: #68788c;
-      font-size: 13px;
+      color: #708197;
+      font-size: 12px;
       margin-top: 25px;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 700px) {
       .container {
-        padding-top: 22px;
+        padding-top: 20px;
       }
 
-      .card {
-        padding: 17px;
-        border-radius: 17px;
+      .header h1 {
+        font-size: 27px;
       }
 
-      textarea {
-        min-height: 170px;
+      .panel {
+        padding: 18px;
       }
 
-      .voice-controls button,
-      .bottom-actions button {
-        flex: 1;
+      .tab {
+        width: 100%;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .button-row {
+        flex-direction: column;
       }
     }
   </style>
@@ -337,750 +259,1249 @@
 
 <body>
 
-  <main class="container">
+<div class="container">
 
-    <header class="header">
+  <div class="header">
+    <h1>Voice to English</h1>
+    <p>Speak naturally in Urdu, Roman Urdu, Hindi or English</p>
+  </div>
 
-      <div class="badge">
-        AI EMAIL REPLY ASSISTANT
-      </div>
+  <!-- MAIN TABS -->
+  <div class="tabs">
 
-      <h1>
-        Voice To Professional Email
-      </h1>
+    <button
+      class="tab active"
+      id="voiceTab"
+      onclick="showPanel('voicePanel', this)">
+      🎤 Voice to English
+    </button>
 
-      <p class="subtitle">
-        Read the received email, speak your reply in
-        Urdu, Roman Urdu, Hindi or English, and generate
-        a complete professional English email.
-      </p>
+    <button
+      class="tab"
+      id="emailTab"
+      onclick="showPanel('emailPanel', this)">
+      📧 Email Reply Assistant
+    </button>
 
-    </header>
-
-
-    <!-- RECEIVED EMAIL -->
-
-    <section class="card">
-
-      <div class="card-title">
-
-        <div>
-          <h2>
-            Received Email
-          </h2>
-        </div>
-
-        <div class="step">
-          1
-        </div>
-
-      </div>
-
-      <textarea
-        id="emailInput"
-        placeholder="Paste the complete received email here..."
-      ></textarea>
-
-      <div class="tip">
-        Paste the email you received. The AI will understand
-        the email before preparing your reply.
-      </div>
-
-    </section>
+  </div>
 
 
-    <!-- VOICE REPLY -->
+  <!-- ===================================================== -->
+  <!-- VOICE TO ENGLISH -->
+  <!-- ===================================================== -->
 
-    <section class="card">
+  <section class="panel active" id="voicePanel">
 
-      <div class="card-title">
+    <h2>🎤 Voice to English</h2>
 
-        <div>
-          <h2>
-            Your Reply
-          </h2>
-        </div>
+    <div class="panel-description">
+      Urdu, Roman Urdu, Hindi ya English mein bolen.
+      Aapki voice ko professional English text mein convert kiya jayega.
+    </div>
 
-        <div class="step">
-          2
-        </div>
+    <label for="voiceEnglishInput">
+      Your Voice / Spoken Text
+    </label>
 
-      </div>
+    <textarea
+      id="voiceEnglishInput"
+      placeholder="Click Start Voice and speak..."
+    ></textarea>
 
-      <div class="voice-area">
-
-        <textarea
-          id="voiceInput"
-          placeholder="Speak your reply in Urdu, Roman Urdu, Hindi or English..."
-        ></textarea>
-
-        <div class="voice-controls">
-
-          <button
-            id="voiceButton"
-            class="voice-btn"
-            type="button"
-          >
-            🎤 Start Voice
-          </button>
-
-          <button
-            id="clearVoiceButton"
-            class="secondary"
-            type="button"
-          >
-            Clear Voice
-          </button>
-
-        </div>
-
-      </div>
-
-      <div class="tip">
-        Example: "Unko batao shipment kal deliver ho jayegi
-        aur delivery ke baad POD bhi share kar denge."
-      </div>
-
-    </section>
-
-
-    <!-- GENERATE -->
-
-    <section class="card">
-
-      <div class="step" style="margin-bottom:15px;">
-        3
-      </div>
+    <div class="button-row">
 
       <button
-        id="generateButton"
-        class="generate"
-        type="button"
-      >
+        class="primary"
+        id="voiceStartButton"
+        onclick="startVoiceToEnglish()">
+        🎤 Start Voice
+      </button>
+
+      <button
+        class="secondary"
+        onclick="stopVoiceToEnglish()">
+        ⏹ Stop
+      </button>
+
+      <button
+        class="primary"
+        onclick="translateVoiceToEnglish()">
+        🌐 Convert to English
+      </button>
+
+      <button
+        class="secondary"
+        onclick="copyVoiceEnglish()">
+        📋 Copy
+      </button>
+
+      <button
+        class="secondary"
+        onclick="listenVoiceEnglish()">
+        🔊 Listen
+      </button>
+
+      <button
+        class="danger"
+        onclick="clearVoiceEnglish()">
+        🧹 Clear
+      </button>
+
+    </div>
+
+    <div id="voiceStatus" class="status"></div>
+
+    <div class="result-box">
+
+      <label for="englishOutput">
+        English Result
+      </label>
+
+      <textarea
+        id="englishOutput"
+        placeholder="English result will appear here..."
+      ></textarea>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================== -->
+  <!-- EMAIL REPLY ASSISTANT -->
+  <!-- ===================================================== -->
+
+  <section class="panel" id="emailPanel">
+
+    <h2>📧 Email Reply Assistant</h2>
+
+    <div class="panel-description">
+      Received email paste karein, phir Urdu/Roman Urdu/Hindi/English
+      mein apna jawab voice se dein. App complete professional English
+      email reply banayegi.
+    </div>
+
+
+    <label for="emailInput">
+      1. Received Email
+    </label>
+
+    <textarea
+      id="emailInput"
+      placeholder="Paste the complete received email here..."
+    ></textarea>
+
+
+    <label for="voiceInput">
+      2. Your Reply
+    </label>
+
+    <textarea
+      id="voiceInput"
+      placeholder="Click Start Voice and tell us what you want to reply..."
+    ></textarea>
+
+
+    <div class="button-row">
+
+      <button
+        class="primary"
+        id="emailVoiceButton"
+        onclick="startEmailVoice()">
+        🎤 Start Voice
+      </button>
+
+      <button
+        class="secondary"
+        onclick="stopEmailVoice()">
+        ⏹ Stop
+      </button>
+
+      <button
+        class="primary"
+        onclick="generateEmailReply()">
         ✨ Generate Professional Email
       </button>
 
-      <div
-        id="status"
-        class="status"
-      ></div>
+    </div>
 
-    </section>
+    <div id="emailStatus" class="status"></div>
 
 
-    <!-- FINAL EMAIL -->
+    <div class="result-box">
 
-    <section class="card">
+      <label for="subjectOutput">
+        Email Subject
+      </label>
 
-      <div class="card-title">
+      <input
+        id="subjectOutput"
+        type="text"
+        placeholder="Generated subject..."
+      >
 
-        <div>
-          <h2>
-            Final Email
-          </h2>
-        </div>
 
-        <div class="step">
-          4
-        </div>
-
-      </div>
-
-      <div class="subject">
-
-        <span class="subject-label">
-          Subject
-        </span>
-
-        <input
-          id="subjectOutput"
-          class="subject-box"
-          type="text"
-          placeholder="Email subject will appear here..."
-          readonly
-        >
-
-      </div>
+      <label for="emailOutput">
+        Final Email
+      </label>
 
       <textarea
         id="emailOutput"
-        class="output"
-        placeholder="Your complete professional email will appear here..."
-        readonly
+        placeholder="Professional email will appear here..."
       ></textarea>
 
-      <div class="bottom-actions">
+
+      <div class="button-row">
 
         <button
-          id="copyButton"
-          class="secondary"
-          type="button"
-        >
+          class="primary"
+          onclick="copyEmail()">
           📋 Copy Email
         </button>
 
         <button
-          id="listenButton"
           class="secondary"
-          type="button"
-        >
+          onclick="listenEmail()">
           🔊 Listen
         </button>
 
         <button
-          id="clearAllButton"
-          class="secondary"
-          type="button"
-        >
-          🗑 Clear All
+          class="danger"
+          onclick="clearAllEmail()">
+          🧹 Clear All
         </button>
 
       </div>
 
-    </section>
-
-
-    <div class="footer">
-      Professional Email Assistant
     </div>
 
-  </main>
+  </section>
 
 
-  <script>
+  <div class="footer">
+    Voice to English • Email Reply Assistant
+  </div>
 
-    const API_URL =
-      "https://script.google.com/macros/s/AKfycbz3B_vJ9IinNwwhb4CYisaZ4uU0ROhttILvNSuDPvAhNJcndgEdFCV1brRC222L5bA-/exec";
+</div>
 
 
-    const emailInput =
-      document.getElementById("emailInput");
+<script>
 
-    const voiceInput =
-      document.getElementById("voiceInput");
+  /*
+   * IMPORTANT:
+   * Existing Apps Script Web App URL.
+   * Do NOT put Gemini API key here.
+   */
 
-    const voiceButton =
-      document.getElementById("voiceButton");
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbz3B_vJ9IinNwwhb4CYisaZ4uU0ROhttILvNSuDPvAhNJcndgEdFCV1brRC222L5bA-/exec";
 
-    const clearVoiceButton =
-      document.getElementById("clearVoiceButton");
 
-    const generateButton =
-      document.getElementById("generateButton");
+  /* =====================================================
+     TAB SWITCHING
+  ===================================================== */
 
-    const subjectOutput =
-      document.getElementById("subjectOutput");
+  function showPanel(panelId, button) {
 
-    const emailOutput =
-      document.getElementById("emailOutput");
+    document
+      .querySelectorAll(".panel")
+      .forEach(function(panel) {
+        panel.classList.remove("active");
+      });
 
-    const copyButton =
-      document.getElementById("copyButton");
+    document
+      .querySelectorAll(".tab")
+      .forEach(function(tab) {
+        tab.classList.remove("active");
+      });
 
-    const listenButton =
-      document.getElementById("listenButton");
+    document
+      .getElementById(panelId)
+      .classList.add("active");
 
-    const clearAllButton =
-      document.getElementById("clearAllButton");
+    button.classList.add("active");
+  }
 
-    const status =
-      document.getElementById("status");
 
+  /* =====================================================
+     SPEECH RECOGNITION
+  ===================================================== */
 
-    let recognition = null;
-    let isRecording = false;
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
+  let voiceRecognition = null;
+  let emailRecognition = null;
 
-    /*
-     * VOICE RECOGNITION
-     */
+  let voiceListening = false;
+  let emailListening = false;
 
-    const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
 
+  function createRecognition() {
 
-    if (SpeechRecognition) {
-
-      recognition =
-        new SpeechRecognition();
-
-      recognition.continuous = true;
-      recognition.interimResults = true;
-
-      /*
-       * Urdu is useful for Urdu speakers.
-       * Browser will still capture mixed speech.
-       */
-      recognition.lang = "ur-PK";
-
-
-      recognition.onstart = function() {
-
-        isRecording = true;
-
-        voiceButton.textContent =
-          "⏹ Stop Voice";
-
-        voiceButton.classList.add(
-          "recording"
-        );
-
-        status.textContent =
-          "Listening... speak your reply.";
-
-        status.className =
-          "status";
-
-      };
-
-
-      recognition.onresult =
-        function(event) {
-
-          let finalText = "";
-          let interimText = "";
-
-          for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-          ) {
-
-            const transcript =
-              event.results[i][0].transcript;
-
-            if (
-              event.results[i].isFinal
-            ) {
-              finalText += transcript + " ";
-            } else {
-              interimText += transcript;
-            }
-
-          }
-
-          if (finalText) {
-
-            voiceInput.value +=
-              finalText;
-
-          }
-
-          if (interimText) {
-
-            status.textContent =
-              "Listening: " + interimText;
-
-          }
-
-        };
-
-
-      recognition.onerror =
-        function(event) {
-
-          status.textContent =
-            "Voice error: " +
-            event.error;
-
-          status.className =
-            "status error";
-
-          stopRecording();
-
-        };
-
-
-      recognition.onend =
-        function() {
-
-          if (isRecording) {
-
-            try {
-              recognition.start();
-            } catch (error) {
-              stopRecording();
-            }
-
-          }
-
-        };
-
-    } else {
-
-      voiceButton.disabled = true;
-
-      voiceButton.textContent =
-        "🎤 Voice Not Supported";
-
-      status.textContent =
-        "Please use Google Chrome for voice input.";
-
-      status.className =
-        "status error";
-    }
-
-
-    function stopRecording() {
-
-      isRecording = false;
-
-      voiceButton.textContent =
-        "🎤 Start Voice";
-
-      voiceButton.classList.remove(
-        "recording"
+    if (!SpeechRecognition) {
+      alert(
+        "Voice recognition is not supported in this browser. Please use Google Chrome."
       );
 
-      if (recognition) {
-
-        try {
-          recognition.stop();
-        } catch (error) {}
-
-      }
-
+      return null;
     }
 
+    const recognition = new SpeechRecognition();
 
-    voiceButton.addEventListener(
-      "click",
-      function() {
+    recognition.lang = "ur-PK";
+    recognition.continuous = true;
+    recognition.interimResults = true;
 
-        if (!recognition) {
-          return;
-        }
+    return recognition;
+  }
 
-        if (isRecording) {
 
-          stopRecording();
+  /* =====================================================
+     VOICE TO ENGLISH - MICROPHONE
+  ===================================================== */
 
-          status.textContent =
-            "Voice stopped.";
+  function startVoiceToEnglish() {
 
-          status.className =
-            "status";
+    if (!SpeechRecognition) {
+      setVoiceStatus(
+        "Voice recognition is not supported. Please use Google Chrome.",
+        true
+      );
+      return;
+    }
+
+    if (voiceListening) {
+      stopVoiceToEnglish();
+      return;
+    }
+
+    voiceRecognition = createRecognition();
+
+    if (!voiceRecognition) {
+      return;
+    }
+
+    const input =
+      document.getElementById("voiceEnglishInput");
+
+    let finalText = input.value.trim();
+
+    voiceRecognition.onstart = function() {
+
+      voiceListening = true;
+
+      const button =
+        document.getElementById("voiceStartButton");
+
+      button.textContent = "🔴 Listening...";
+      button.classList.add("mic-active");
+
+      setVoiceStatus(
+        "Listening... ab bol sakte hain."
+      );
+    };
+
+
+    voiceRecognition.onresult = function(event) {
+
+      let interimText = "";
+
+      for (
+        let i = event.resultIndex;
+        i < event.results.length;
+        i++
+      ) {
+
+        const transcript =
+          event.results[i][0].transcript;
+
+        if (event.results[i].isFinal) {
+
+          finalText +=
+            (finalText ? " " : "") +
+            transcript.trim();
 
         } else {
 
-          try {
-
-            recognition.start();
-
-          } catch (error) {
-
-            status.textContent =
-              "Could not start microphone.";
-
-            status.className =
-              "status error";
-
-          }
-
+          interimText += transcript;
         }
-
       }
-    );
 
+      input.value =
+        finalText +
+        (interimText ? " " + interimText : "");
+    };
 
-    clearVoiceButton.addEventListener(
-      "click",
-      function() {
 
-        voiceInput.value = "";
+    voiceRecognition.onerror = function(event) {
 
-        status.textContent = "";
+      console.log(
+        "Voice recognition error:",
+        event.error
+      );
 
-        if (isRecording) {
-          stopRecording();
-        }
+      if (event.error === "not-allowed") {
 
-      }
-    );
-
-
-    /*
-     * GENERATE EMAIL
-     */
-
-    generateButton.addEventListener(
-      "click",
-      async function() {
-
-        const receivedEmail =
-          emailInput.value.trim();
-
-        const reply =
-          voiceInput.value.trim();
-
-
-        if (!receivedEmail) {
-
-          status.textContent =
-            "Please paste the received email first.";
-
-          status.className =
-            "status error";
-
-          emailInput.focus();
-
-          return;
-        }
-
-
-        if (!reply) {
-
-          status.textContent =
-            "Please give your reply by voice or type it.";
-
-          status.className =
-            "status error";
-
-          voiceInput.focus();
-
-          return;
-        }
-
-
-        if (isRecording) {
-          stopRecording();
-        }
-
-
-        generateButton.disabled = true;
-
-        generateButton.textContent =
-          "⏳ Creating Professional Email...";
-
-        status.textContent =
-          "AI is reading the email and preparing your reply...";
-
-        status.className =
-          "status";
-
-
-        subjectOutput.value = "";
-        emailOutput.value = "";
-
-
-        try {
-
-          const response =
-            await fetch(
-              API_URL,
-              {
-                method: "POST",
-
-                headers: {
-                  "Content-Type":
-                    "text/plain;charset=utf-8"
-                },
-
-                body: JSON.stringify({
-                  emailText: receivedEmail,
-                  voiceReply: reply
-                })
-              }
-            );
-
-
-          const data =
-            await response.json();
-
-
-          if (!data.success) {
-
-            throw new Error(
-              data.error ||
-              "Email generation failed."
-            );
-
-          }
-
-
-          subjectOutput.value =
-            data.subject || "";
-
-          emailOutput.value =
-            data.email || "";
-
-
-          status.textContent =
-            "Professional email created successfully.";
-
-          status.className =
-            "status success";
-
-
-        } catch (error) {
-
-          status.textContent =
-            "Error: " +
-            error.message;
-
-          status.className =
-            "status error";
-
-        } finally {
-
-          generateButton.disabled = false;
-
-          generateButton.textContent =
-            "✨ Generate Professional Email";
-
-        }
-
-      }
-    );
-
-
-    /*
-     * COPY EMAIL
-     */
-
-    copyButton.addEventListener(
-      "click",
-      async function() {
-
-        const subject =
-          subjectOutput.value.trim();
-
-        const body =
-          emailOutput.value.trim();
-
-
-        if (!body) {
-
-          status.textContent =
-            "There is no email to copy.";
-
-          status.className =
-            "status error";
-
-          return;
-
-        }
-
-
-        const completeEmail =
-          "Subject: " +
-          subject +
-          "\n\n" +
-          body;
-
-
-        try {
-
-          await navigator.clipboard.writeText(
-            completeEmail
-          );
-
-          status.textContent =
-            "Email copied successfully.";
-
-          status.className =
-            "status success";
-
-        } catch (error) {
-
-          status.textContent =
-            "Could not copy the email.";
-
-          status.className =
-            "status error";
-
-        }
-
-      }
-    );
-
-
-    /*
-     * LISTEN
-     */
-
-    listenButton.addEventListener(
-      "click",
-      function() {
-
-        const subject =
-          subjectOutput.value.trim();
-
-        const body =
-          emailOutput.value.trim();
-
-
-        if (!body) {
-
-          status.textContent =
-            "There is no email to listen to.";
-
-          status.className =
-            "status error";
-
-          return;
-
-        }
-
-
-        window.speechSynthesis.cancel();
-
-
-        const textToRead =
-          subject
-            ? "Subject. " +
-              subject +
-              ". " +
-              body
-            : body;
-
-
-        const utterance =
-          new SpeechSynthesisUtterance(
-            textToRead
-          );
-
-        utterance.lang = "en-US";
-
-        utterance.rate = 0.95;
-
-        utterance.pitch = 1;
-
-
-        window.speechSynthesis.speak(
-          utterance
+        setVoiceStatus(
+          "Microphone permission denied.",
+          true
         );
 
+      } else {
+
+        setVoiceStatus(
+          "Voice recognition error: " +
+          event.error,
+          true
+        );
       }
+    };
+
+
+    voiceRecognition.onend = function() {
+
+      voiceListening = false;
+
+      const button =
+        document.getElementById("voiceStartButton");
+
+      button.textContent = "🎤 Start Voice";
+      button.classList.remove("mic-active");
+    };
+
+
+    voiceRecognition.start();
+  }
+
+
+  function stopVoiceToEnglish() {
+
+    if (voiceRecognition) {
+
+      try {
+        voiceRecognition.stop();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    voiceListening = false;
+
+    const button =
+      document.getElementById("voiceStartButton");
+
+    button.textContent = "🎤 Start Voice";
+    button.classList.remove("mic-active");
+
+    setVoiceStatus("Voice stopped.");
+  }
+
+
+  /* =====================================================
+     VOICE TO ENGLISH - CONVERT
+  ===================================================== */
+
+  async function translateVoiceToEnglish() {
+
+    const input =
+      document
+        .getElementById("voiceEnglishInput")
+        .value
+        .trim();
+
+    if (!input) {
+
+      setVoiceStatus(
+        "Please speak or enter some text first.",
+        true
+      );
+
+      return;
+    }
+
+
+    setVoiceStatus(
+      "Converting to English..."
     );
 
 
     /*
-     * CLEAR ALL
+     * First try local browser translation behavior
+     * through the existing backend.
+     *
+     * The backend expects emailText + voiceReply.
+     * We use the spoken text as voiceReply.
      */
 
-    clearAllButton.addEventListener(
-      "click",
+    try {
+
+      const response =
+        await fetch(
+          API_URL,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "text/plain;charset=utf-8"
+            },
+
+            body: JSON.stringify({
+              emailText:
+                "Please translate the user's spoken text into natural professional English. Do not create an email unless the user specifically asks for one.",
+
+              voiceReply: input
+            })
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!data.success) {
+
+        throw new Error(
+          data.error ||
+          "Unable to convert text."
+        );
+      }
+
+
+      let result =
+        data.email || "";
+
+
+      /*
+       * Remove unnecessary email-style formatting
+       * if returned by backend.
+       */
+
+      result =
+        result
+          .replace(/^Subject\s*:.*$/im, "")
+          .trim();
+
+
+      document
+        .getElementById("englishOutput")
+        .value = result;
+
+
+      setVoiceStatus(
+        "English conversion completed.",
+        false,
+        true
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      setVoiceStatus(
+        error.message ||
+        "Something went wrong.",
+        true
+      );
+    }
+  }
+
+
+  /* =====================================================
+     EMAIL VOICE
+  ===================================================== */
+
+  function startEmailVoice() {
+
+    if (!SpeechRecognition) {
+
+      setEmailStatus(
+        "Voice recognition is not supported. Please use Google Chrome.",
+        true
+      );
+
+      return;
+    }
+
+
+    if (emailListening) {
+
+      stopEmailVoice();
+      return;
+    }
+
+
+    emailRecognition =
+      createRecognition();
+
+
+    if (!emailRecognition) {
+      return;
+    }
+
+
+    const input =
+      document.getElementById("voiceInput");
+
+
+    let finalText =
+      input.value.trim();
+
+
+    emailRecognition.onstart =
       function() {
 
-        emailInput.value = "";
-        voiceInput.value = "";
-        subjectOutput.value = "";
-        emailOutput.value = "";
+        emailListening = true;
 
-        status.textContent = "";
+        const button =
+          document.getElementById(
+            "emailVoiceButton"
+          );
 
-        window.speechSynthesis.cancel();
+        button.textContent =
+          "🔴 Listening...";
 
-        if (isRecording) {
-          stopRecording();
+        button.classList.add(
+          "mic-active"
+        );
+
+
+        setEmailStatus(
+          "Listening... apna reply bolen."
+        );
+      };
+
+
+    emailRecognition.onresult =
+      function(event) {
+
+        let interimText = "";
+
+
+        for (
+          let i = event.resultIndex;
+          i < event.results.length;
+          i++
+        ) {
+
+          const transcript =
+            event.results[i][0].transcript;
+
+
+          if (
+            event.results[i].isFinal
+          ) {
+
+            finalText +=
+              (finalText ? " " : "") +
+              transcript.trim();
+
+          } else {
+
+            interimText += transcript;
+          }
         }
 
+
+        input.value =
+          finalText +
+          (
+            interimText
+              ? " " + interimText
+              : ""
+          );
+      };
+
+
+    emailRecognition.onerror =
+      function(event) {
+
+        console.log(
+          "Email voice error:",
+          event.error
+        );
+
+
+        if (
+          event.error === "not-allowed"
+        ) {
+
+          setEmailStatus(
+            "Microphone permission denied.",
+            true
+          );
+
+        } else {
+
+          setEmailStatus(
+            "Voice recognition error: " +
+            event.error,
+            true
+          );
+        }
+      };
+
+
+    emailRecognition.onend =
+      function() {
+
+        emailListening = false;
+
+        const button =
+          document.getElementById(
+            "emailVoiceButton"
+          );
+
+        button.textContent =
+          "🎤 Start Voice";
+
+        button.classList.remove(
+          "mic-active"
+        );
+      };
+
+
+    emailRecognition.start();
+  }
+
+
+  function stopEmailVoice() {
+
+    if (emailRecognition) {
+
+      try {
+        emailRecognition.stop();
+      } catch (error) {
+        console.log(error);
       }
+    }
+
+
+    emailListening = false;
+
+
+    const button =
+      document.getElementById(
+        "emailVoiceButton"
+      );
+
+    button.textContent =
+      "🎤 Start Voice";
+
+    button.classList.remove(
+      "mic-active"
     );
 
-  </script>
+
+    setEmailStatus(
+      "Voice stopped."
+    );
+  }
+
+
+  /* =====================================================
+     GENERATE PROFESSIONAL EMAIL
+  ===================================================== */
+
+  async function generateEmailReply() {
+
+    const receivedEmail =
+      document
+        .getElementById("emailInput")
+        .value
+        .trim();
+
+
+    const reply =
+      document
+        .getElementById("voiceInput")
+        .value
+        .trim();
+
+
+    if (!receivedEmail) {
+
+      setEmailStatus(
+        "Please paste the received email first.",
+        true
+      );
+
+      return;
+    }
+
+
+    if (!reply) {
+
+      setEmailStatus(
+        "Please provide your reply by voice or text.",
+        true
+      );
+
+      return;
+    }
+
+
+    setEmailStatus(
+      "Generating professional email... please wait."
+    );
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "text/plain;charset=utf-8"
+            },
+
+            body: JSON.stringify({
+              emailText:
+                receivedEmail,
+
+              voiceReply:
+                reply
+            })
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!data.success) {
+
+        throw new Error(
+          data.error ||
+          "Unable to generate email."
+        );
+      }
+
+
+      document
+        .getElementById(
+          "subjectOutput"
+        )
+        .value =
+        data.subject || "";
+
+
+      document
+        .getElementById(
+          "emailOutput"
+        )
+        .value =
+        data.email || "";
+
+
+      setEmailStatus(
+        "Professional email generated successfully.",
+        false,
+        true
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      setEmailStatus(
+        error.message ||
+        "Something went wrong.",
+        true
+      );
+    }
+  }
+
+
+  /* =====================================================
+     COPY FUNCTIONS
+  ===================================================== */
+
+  async function copyVoiceEnglish() {
+
+    const text =
+      document
+        .getElementById("englishOutput")
+        .value
+        .trim();
+
+
+    if (!text) {
+
+      setVoiceStatus(
+        "Nothing to copy.",
+        true
+      );
+
+      return;
+    }
+
+
+    try {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+      setVoiceStatus(
+        "English text copied.",
+        false,
+        true
+      );
+
+    } catch (error) {
+
+      fallbackCopy(text);
+
+      setVoiceStatus(
+        "Copied.",
+        false,
+        true
+      );
+    }
+  }
+
+
+  async function copyEmail() {
+
+    const subject =
+      document
+        .getElementById("subjectOutput")
+        .value
+        .trim();
+
+
+    const body =
+      document
+        .getElementById("emailOutput")
+        .value
+        .trim();
+
+
+    if (!subject && !body) {
+
+      setEmailStatus(
+        "Nothing to copy.",
+        true
+      );
+
+      return;
+    }
+
+
+    const text =
+      "Subject: " +
+      subject +
+      "\n\n" +
+      body;
+
+
+    try {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+      setEmailStatus(
+        "Complete email copied.",
+        false,
+        true
+      );
+
+    } catch (error) {
+
+      fallbackCopy(text);
+
+      setEmailStatus(
+        "Copied.",
+        false,
+        true
+      );
+    }
+  }
+
+
+  function fallbackCopy(text) {
+
+    const textarea =
+      document.createElement("textarea");
+
+    textarea.value = text;
+
+    textarea.style.position =
+      "fixed";
+
+    textarea.style.opacity =
+      "0";
+
+    document.body.appendChild(
+      textarea
+    );
+
+    textarea.select();
+
+    document.execCommand(
+      "copy"
+    );
+
+    document.body.removeChild(
+      textarea
+    );
+  }
+
+
+  /* =====================================================
+     LISTEN
+  ===================================================== */
+
+  function speakText(text) {
+
+    if (!text) {
+      return;
+    }
+
+
+    if (
+      !("speechSynthesis" in window)
+    ) {
+
+      alert(
+        "Text-to-speech is not supported in this browser."
+      );
+
+      return;
+    }
+
+
+    window.speechSynthesis.cancel();
+
+
+    const speech =
+      new SpeechSynthesisUtterance(
+        text
+      );
+
+
+    speech.lang = "en-US";
+    speech.rate = 0.95;
+    speech.pitch = 1;
+
+
+    window.speechSynthesis.speak(
+      speech
+    );
+  }
+
+
+  function listenVoiceEnglish() {
+
+    const text =
+      document
+        .getElementById("englishOutput")
+        .value
+        .trim();
+
+
+    if (!text) {
+
+      setVoiceStatus(
+        "Nothing to listen.",
+        true
+      );
+
+      return;
+    }
+
+
+    speakText(text);
+  }
+
+
+  function listenEmail() {
+
+    const subject =
+      document
+        .getElementById("subjectOutput")
+        .value
+        .trim();
+
+
+    const body =
+      document
+        .getElementById("emailOutput")
+        .value
+        .trim();
+
+
+    const text =
+      (
+        subject
+          ? "Subject. " + subject + ". "
+          : ""
+      ) +
+      body;
+
+
+    if (!text.trim()) {
+
+      setEmailStatus(
+        "Nothing to listen.",
+        true
+      );
+
+      return;
+    }
+
+
+    speakText(text);
+  }
+
+
+  /* =====================================================
+     CLEAR
+  ===================================================== */
+
+  function clearVoiceEnglish() {
+
+    document
+      .getElementById(
+        "voiceEnglishInput"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "englishOutput"
+      )
+      .value = "";
+
+
+    setVoiceStatus("");
+  }
+
+
+  function clearAllEmail() {
+
+    document
+      .getElementById(
+        "emailInput"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "voiceInput"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "subjectOutput"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "emailOutput"
+      )
+      .value = "";
+
+
+    setEmailStatus("");
+  }
+
+
+  /* =====================================================
+     STATUS
+  ===================================================== */
+
+  function setVoiceStatus(
+    message,
+    isError,
+    isSuccess
+  ) {
+
+    const status =
+      document.getElementById(
+        "voiceStatus"
+      );
+
+
+    status.textContent =
+      message || "";
+
+
+    status.classList.remove(
+      "error",
+      "success"
+    );
+
+
+    if (isError) {
+      status.classList.add(
+        "error"
+      );
+    }
+
+
+    if (isSuccess) {
+      status.classList.add(
+        "success"
+      );
+    }
+  }
+
+
+  function setEmailStatus(
+    message,
+    isError,
+    isSuccess
+  ) {
+
+    const status =
+      document.getElementById(
+        "emailStatus"
+      );
+
+
+    status.textContent =
+      message || "";
+
+
+    status.classList.remove(
+      "error",
+      "success"
+    );
+
+
+    if (isError) {
+      status.classList.add(
+        "error"
+      );
+    }
+
+
+    if (isSuccess) {
+      status.classList.add(
+        "success"
+      );
+    }
+  }
+
+</script>
 
 </body>
 </html>
