@@ -1,10 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Voice to English | Email Reply Assistant</title>
+  <title>Voice to English | English to Urdu | Email Reply Assistant</title>
 
   <style>
     * {
@@ -132,6 +133,18 @@
 
     #englishOutput {
       min-height: 180px;
+    }
+
+    #englishUrduInput {
+      min-height: 180px;
+    }
+
+    #urduOutput {
+      min-height: 220px;
+      direction: rtl;
+      text-align: right;
+      line-height: 1.9;
+      font-size: 17px;
     }
 
     #emailInput {
@@ -266,19 +279,24 @@
     <p>Speak naturally in Urdu, Roman Urdu, Hindi or English</p>
   </div>
 
+
   <!-- MAIN TABS -->
   <div class="tabs">
 
     <button
       class="tab active"
-      id="voiceTab"
       onclick="showPanel('voicePanel', this)">
       🎤 Voice to English
     </button>
 
     <button
       class="tab"
-      id="emailTab"
+      onclick="showPanel('urduPanel', this)">
+      🇬🇧 English to Urdu
+    </button>
+
+    <button
+      class="tab"
       onclick="showPanel('emailPanel', this)">
       📧 Email Reply Assistant
     </button>
@@ -368,6 +386,74 @@
 
 
   <!-- ===================================================== -->
+  <!-- ENGLISH TO URDU -->
+  <!-- ===================================================== -->
+
+  <section class="panel" id="urduPanel">
+
+    <h2>🇬🇧 English to Urdu</h2>
+
+    <div class="panel-description">
+      English text yahan paste ya type karein.
+      App usay natural aur easy-to-understand Urdu mein translate karegi.
+    </div>
+
+    <label for="englishUrduInput">
+      English Text
+    </label>
+
+    <textarea
+      id="englishUrduInput"
+      placeholder="Type or paste English text here..."
+    ></textarea>
+
+    <div class="button-row">
+
+      <button
+        class="primary"
+        onclick="translateEnglishToUrdu()">
+        🇵🇰 Translate to Urdu
+      </button>
+
+      <button
+        class="secondary"
+        onclick="copyUrdu()">
+        📋 Copy Urdu
+      </button>
+
+      <button
+        class="secondary"
+        onclick="listenUrdu()">
+        🔊 Listen Urdu
+      </button>
+
+      <button
+        class="danger"
+        onclick="clearEnglishUrdu()">
+        🧹 Clear
+      </button>
+
+    </div>
+
+    <div id="urduStatus" class="status"></div>
+
+    <div class="result-box">
+
+      <label for="urduOutput">
+        Urdu Result
+      </label>
+
+      <textarea
+        id="urduOutput"
+        placeholder="اردو ترجمہ یہاں آئے گا..."
+      ></textarea>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================== -->
   <!-- EMAIL REPLY ASSISTANT -->
   <!-- ===================================================== -->
 
@@ -381,7 +467,6 @@
       email reply banayegi.
     </div>
 
-
     <label for="emailInput">
       1. Received Email
     </label>
@@ -391,7 +476,6 @@
       placeholder="Paste the complete received email here..."
     ></textarea>
 
-
     <label for="voiceInput">
       2. Your Reply
     </label>
@@ -400,7 +484,6 @@
       id="voiceInput"
       placeholder="Click Start Voice and tell us what you want to reply..."
     ></textarea>
-
 
     <div class="button-row">
 
@@ -427,7 +510,6 @@
 
     <div id="emailStatus" class="status"></div>
 
-
     <div class="result-box">
 
       <label for="subjectOutput">
@@ -440,7 +522,6 @@
         placeholder="Generated subject..."
       >
 
-
       <label for="emailOutput">
         Final Email
       </label>
@@ -449,7 +530,6 @@
         id="emailOutput"
         placeholder="Professional email will appear here..."
       ></textarea>
-
 
       <div class="button-row">
 
@@ -479,7 +559,7 @@
 
 
   <div class="footer">
-    Voice to English • Email Reply Assistant
+    Voice to English • English to Urdu • Email Reply Assistant
   </div>
 
 </div>
@@ -490,7 +570,7 @@
   /*
    * IMPORTANT:
    * Existing Apps Script Web App URL.
-   * Do NOT put Gemini API key here.
+   * Gemini API key frontend mein nahi hai.
    */
 
   const API_URL =
@@ -541,6 +621,7 @@
   function createRecognition() {
 
     if (!SpeechRecognition) {
+
       alert(
         "Voice recognition is not supported in this browser. Please use Google Chrome."
       );
@@ -548,7 +629,8 @@
       return null;
     }
 
-    const recognition = new SpeechRecognition();
+    const recognition =
+      new SpeechRecognition();
 
     recognition.lang = "ur-PK";
     recognition.continuous = true;
@@ -565,10 +647,12 @@
   function startVoiceToEnglish() {
 
     if (!SpeechRecognition) {
+
       setVoiceStatus(
         "Voice recognition is not supported. Please use Google Chrome.",
         true
       );
+
       return;
     }
 
@@ -577,99 +661,127 @@
       return;
     }
 
-    voiceRecognition = createRecognition();
+    voiceRecognition =
+      createRecognition();
 
     if (!voiceRecognition) {
       return;
     }
 
     const input =
-      document.getElementById("voiceEnglishInput");
-
-    let finalText = input.value.trim();
-
-    voiceRecognition.onstart = function() {
-
-      voiceListening = true;
-
-      const button =
-        document.getElementById("voiceStartButton");
-
-      button.textContent = "🔴 Listening...";
-      button.classList.add("mic-active");
-
-      setVoiceStatus(
-        "Listening... ab bol sakte hain."
+      document.getElementById(
+        "voiceEnglishInput"
       );
-    };
+
+    let finalText =
+      input.value.trim();
+
+    voiceRecognition.onstart =
+      function() {
+
+        voiceListening = true;
+
+        const button =
+          document.getElementById(
+            "voiceStartButton"
+          );
+
+        button.textContent =
+          "🔴 Listening...";
+
+        button.classList.add(
+          "mic-active"
+        );
+
+        setVoiceStatus(
+          "Listening... ab bol sakte hain."
+        );
+      };
 
 
-    voiceRecognition.onresult = function(event) {
+    voiceRecognition.onresult =
+      function(event) {
 
-      let interimText = "";
+        let interimText = "";
 
-      for (
-        let i = event.resultIndex;
-        i < event.results.length;
-        i++
-      ) {
+        for (
+          let i = event.resultIndex;
+          i < event.results.length;
+          i++
+        ) {
 
-        const transcript =
-          event.results[i][0].transcript;
+          const transcript =
+            event.results[i][0].transcript;
 
-        if (event.results[i].isFinal) {
+          if (
+            event.results[i].isFinal
+          ) {
 
-          finalText +=
-            (finalText ? " " : "") +
-            transcript.trim();
+            finalText +=
+              (finalText ? " " : "") +
+              transcript.trim();
+
+          } else {
+
+            interimText += transcript;
+          }
+        }
+
+        input.value =
+          finalText +
+          (
+            interimText
+              ? " " + interimText
+              : ""
+          );
+      };
+
+
+    voiceRecognition.onerror =
+      function(event) {
+
+        console.log(
+          "Voice recognition error:",
+          event.error
+        );
+
+        if (
+          event.error === "not-allowed"
+        ) {
+
+          setVoiceStatus(
+            "Microphone permission denied.",
+            true
+          );
 
         } else {
 
-          interimText += transcript;
+          setVoiceStatus(
+            "Voice recognition error: " +
+            event.error,
+            true
+          );
         }
-      }
-
-      input.value =
-        finalText +
-        (interimText ? " " + interimText : "");
-    };
+      };
 
 
-    voiceRecognition.onerror = function(event) {
+    voiceRecognition.onend =
+      function() {
 
-      console.log(
-        "Voice recognition error:",
-        event.error
-      );
+        voiceListening = false;
 
-      if (event.error === "not-allowed") {
+        const button =
+          document.getElementById(
+            "voiceStartButton"
+          );
 
-        setVoiceStatus(
-          "Microphone permission denied.",
-          true
+        button.textContent =
+          "🎤 Start Voice";
+
+        button.classList.remove(
+          "mic-active"
         );
-
-      } else {
-
-        setVoiceStatus(
-          "Voice recognition error: " +
-          event.error,
-          true
-        );
-      }
-    };
-
-
-    voiceRecognition.onend = function() {
-
-      voiceListening = false;
-
-      const button =
-        document.getElementById("voiceStartButton");
-
-      button.textContent = "🎤 Start Voice";
-      button.classList.remove("mic-active");
-    };
+      };
 
 
     voiceRecognition.start();
@@ -690,12 +802,20 @@
     voiceListening = false;
 
     const button =
-      document.getElementById("voiceStartButton");
+      document.getElementById(
+        "voiceStartButton"
+      );
 
-    button.textContent = "🎤 Start Voice";
-    button.classList.remove("mic-active");
+    button.textContent =
+      "🎤 Start Voice";
 
-    setVoiceStatus("Voice stopped.");
+    button.classList.remove(
+      "mic-active"
+    );
+
+    setVoiceStatus(
+      "Voice stopped."
+    );
   }
 
 
@@ -707,7 +827,9 @@
 
     const input =
       document
-        .getElementById("voiceEnglishInput")
+        .getElementById(
+          "voiceEnglishInput"
+        )
         .value
         .trim();
 
@@ -721,19 +843,9 @@
       return;
     }
 
-
     setVoiceStatus(
       "Converting to English..."
     );
-
-
-    /*
-     * First try local browser translation behavior
-     * through the existing backend.
-     *
-     * The backend expects emailText + voiceReply.
-     * We use the spoken text as voiceReply.
-     */
 
     try {
 
@@ -749,10 +861,13 @@
             },
 
             body: JSON.stringify({
-              emailText:
-                "Please translate the user's spoken text into natural professional English. Do not create an email unless the user specifically asks for one.",
 
-              voiceReply: input
+              emailText:
+                "Translate the user's spoken text into natural professional English. Do NOT create an email. Return only the English translation as the email field.",
+
+              voiceReply:
+                input
+
             })
           }
         );
@@ -775,20 +890,21 @@
         data.email || "";
 
 
-      /*
-       * Remove unnecessary email-style formatting
-       * if returned by backend.
-       */
-
       result =
         result
-          .replace(/^Subject\s*:.*$/im, "")
+          .replace(
+            /^Subject\s*:.*$/im,
+            ""
+          )
           .trim();
 
 
       document
-        .getElementById("englishOutput")
-        .value = result;
+        .getElementById(
+          "englishOutput"
+        )
+        .value =
+        result;
 
 
       setVoiceStatus(
@@ -802,6 +918,116 @@
       console.error(error);
 
       setVoiceStatus(
+        error.message ||
+        "Something went wrong.",
+        true
+      );
+    }
+  }
+
+
+  /* =====================================================
+     ENGLISH TO URDU
+  ===================================================== */
+
+  async function translateEnglishToUrdu() {
+
+    const input =
+      document
+        .getElementById(
+          "englishUrduInput"
+        )
+        .value
+        .trim();
+
+    if (!input) {
+
+      setUrduStatus(
+        "Please enter English text first.",
+        true
+      );
+
+      return;
+    }
+
+
+    setUrduStatus(
+      "Translating to Urdu... please wait."
+    );
+
+
+    try {
+
+      const response =
+        await fetch(
+          API_URL,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "text/plain;charset=utf-8"
+            },
+
+            body: JSON.stringify({
+
+              emailText:
+                "Translate the following English text into natural, clear and accurate Urdu. Do NOT write an email. Do NOT add a subject. Return ONLY the Urdu translation in the email field. Preserve names, numbers, dates, amounts, company names and technical terms accurately.",
+
+              voiceReply:
+                input
+
+            })
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!data.success) {
+
+        throw new Error(
+          data.error ||
+          "Unable to translate to Urdu."
+        );
+      }
+
+
+      let result =
+        data.email || "";
+
+
+      result =
+        result
+          .replace(
+            /^Subject\s*:.*$/im,
+            ""
+          )
+          .trim();
+
+
+      document
+        .getElementById(
+          "urduOutput"
+        )
+        .value =
+        result;
+
+
+      setUrduStatus(
+        "Urdu translation completed successfully.",
+        false,
+        true
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      setUrduStatus(
         error.message ||
         "Something went wrong.",
         true
@@ -844,7 +1070,9 @@
 
 
     const input =
-      document.getElementById("voiceInput");
+      document.getElementById(
+        "voiceInput"
+      );
 
 
     let finalText =
@@ -1010,14 +1238,18 @@
 
     const receivedEmail =
       document
-        .getElementById("emailInput")
+        .getElementById(
+          "emailInput"
+        )
         .value
         .trim();
 
 
     const reply =
       document
-        .getElementById("voiceInput")
+        .getElementById(
+          "voiceInput"
+        )
         .value
         .trim();
 
@@ -1063,11 +1295,13 @@
             },
 
             body: JSON.stringify({
+
               emailText:
                 receivedEmail,
 
               voiceReply:
                 reply
+
             })
           }
         );
@@ -1130,7 +1364,9 @@
 
     const text =
       document
-        .getElementById("englishOutput")
+        .getElementById(
+          "englishOutput"
+        )
         .value
         .trim();
 
@@ -1171,18 +1407,69 @@
   }
 
 
+  async function copyUrdu() {
+
+    const text =
+      document
+        .getElementById(
+          "urduOutput"
+        )
+        .value
+        .trim();
+
+
+    if (!text) {
+
+      setUrduStatus(
+        "Nothing to copy.",
+        true
+      );
+
+      return;
+    }
+
+
+    try {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+      setUrduStatus(
+        "Urdu text copied.",
+        false,
+        true
+      );
+
+    } catch (error) {
+
+      fallbackCopy(text);
+
+      setUrduStatus(
+        "Copied.",
+        false,
+        true
+      );
+    }
+  }
+
+
   async function copyEmail() {
 
     const subject =
       document
-        .getElementById("subjectOutput")
+        .getElementById(
+          "subjectOutput"
+        )
         .value
         .trim();
 
 
     const body =
       document
-        .getElementById("emailOutput")
+        .getElementById(
+          "emailOutput"
+        )
         .value
         .trim();
 
@@ -1233,9 +1520,12 @@
   function fallbackCopy(text) {
 
     const textarea =
-      document.createElement("textarea");
+      document.createElement(
+        "textarea"
+      );
 
-    textarea.value = text;
+    textarea.value =
+      text;
 
     textarea.style.position =
       "fixed";
@@ -1263,7 +1553,10 @@
      LISTEN
   ===================================================== */
 
-  function speakText(text) {
+  function speakText(
+    text,
+    language
+  ) {
 
     if (!text) {
       return;
@@ -1291,9 +1584,14 @@
       );
 
 
-    speech.lang = "en-US";
-    speech.rate = 0.95;
-    speech.pitch = 1;
+    speech.lang =
+      language || "en-US";
+
+    speech.rate =
+      0.95;
+
+    speech.pitch =
+      1;
 
 
     window.speechSynthesis.speak(
@@ -1306,7 +1604,9 @@
 
     const text =
       document
-        .getElementById("englishOutput")
+        .getElementById(
+          "englishOutput"
+        )
         .value
         .trim();
 
@@ -1322,7 +1622,39 @@
     }
 
 
-    speakText(text);
+    speakText(
+      text,
+      "en-US"
+    );
+  }
+
+
+  function listenUrdu() {
+
+    const text =
+      document
+        .getElementById(
+          "urduOutput"
+        )
+        .value
+        .trim();
+
+
+    if (!text) {
+
+      setUrduStatus(
+        "Nothing to listen.",
+        true
+      );
+
+      return;
+    }
+
+
+    speakText(
+      text,
+      "ur-PK"
+    );
   }
 
 
@@ -1330,14 +1662,18 @@
 
     const subject =
       document
-        .getElementById("subjectOutput")
+        .getElementById(
+          "subjectOutput"
+        )
         .value
         .trim();
 
 
     const body =
       document
-        .getElementById("emailOutput")
+        .getElementById(
+          "emailOutput"
+        )
         .value
         .trim();
 
@@ -1345,7 +1681,9 @@
     const text =
       (
         subject
-          ? "Subject. " + subject + ". "
+          ? "Subject. " +
+            subject +
+            ". "
           : ""
       ) +
       body;
@@ -1362,7 +1700,10 @@
     }
 
 
-    speakText(text);
+    speakText(
+      text,
+      "en-US"
+    );
   }
 
 
@@ -1387,6 +1728,26 @@
 
 
     setVoiceStatus("");
+  }
+
+
+  function clearEnglishUrdu() {
+
+    document
+      .getElementById(
+        "englishUrduInput"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "urduOutput"
+      )
+      .value = "";
+
+
+    setUrduStatus("");
   }
 
 
@@ -1465,6 +1826,43 @@
   }
 
 
+  function setUrduStatus(
+    message,
+    isError,
+    isSuccess
+  ) {
+
+    const status =
+      document.getElementById(
+        "urduStatus"
+      );
+
+
+    status.textContent =
+      message || "";
+
+
+    status.classList.remove(
+      "error",
+      "success"
+    );
+
+
+    if (isError) {
+      status.classList.add(
+        "error"
+      );
+    }
+
+
+    if (isSuccess) {
+      status.classList.add(
+        "success"
+      );
+    }
+  }
+
+
   function setEmailStatus(
     message,
     isError,
@@ -1505,3 +1903,4 @@
 
 </body>
 </html>
+```
