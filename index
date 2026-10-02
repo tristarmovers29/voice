@@ -1,0 +1,567 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voice to English</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(212,175,55,.16), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(30,80,150,.18), transparent 35%),
+        #07111f;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(12, 25, 42, .94);
+      border: 1px solid rgba(212,175,55,.25);
+      border-radius: 24px;
+      padding: 35px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.45);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      color: #d8b65a;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #b9c5d4;
+      font-size: 16px;
+    }
+
+    .mic-area {
+      text-align: center;
+      margin: 25px 0 35px;
+    }
+
+    .mic-button {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #d8b65a;
+      background: linear-gradient(145deg, #182c45, #0b1728);
+      color: white;
+      font-size: 48px;
+      cursor: pointer;
+      transition: .25s;
+      box-shadow: 0 0 0 rgba(216,182,90,0);
+    }
+
+    .mic-button:hover {
+      transform: scale(1.05);
+    }
+
+    .mic-button.recording {
+      background: #7d2020;
+      animation: pulse 1.2s infinite;
+      box-shadow: 0 0 35px rgba(255,70,70,.35);
+    }
+
+    @keyframes pulse {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    .status {
+      margin-top: 15px;
+      color: #d8b65a;
+      font-weight: bold;
+    }
+
+    .language-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .language-box {
+      flex: 1;
+      background: #101f32;
+      border: 1px solid #263d58;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .language-box span {
+      display: block;
+      color: #8798ad;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .language-box strong {
+      font-size: 16px;
+    }
+
+    .box {
+      margin-top: 20px;
+    }
+
+    .box-title {
+      margin-bottom: 10px;
+      color: #d8b65a;
+      font-weight: bold;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid #29415e;
+      background: #081525;
+      color: #fff;
+      padding: 18px;
+      font-size: 17px;
+      line-height: 1.6;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #d8b65a;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    button.action {
+      border: none;
+      border-radius: 10px;
+      padding: 13px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #d8b65a;
+      color: #07111f;
+    }
+
+    button.action.secondary {
+      background: #203650;
+      color: white;
+    }
+
+    button.action:hover {
+      opacity: .88;
+    }
+
+    .footer {
+      text-align: center;
+      color: #708197;
+      font-size: 12px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 600px) {
+      .app {
+        padding: 22px;
+        border-radius: 18px;
+      }
+
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .language-row {
+        flex-direction: column;
+      }
+
+      .mic-button {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app">
+
+    <header class="header">
+      <h1>Voice to English</h1>
+      <p>Speak naturally — convert your voice into professional English.</p>
+    </header>
+
+    <div class="language-row">
+      <div class="language-box">
+        <span>INPUT</span>
+        <strong>Urdu / Roman Urdu / Hindi</strong>
+      </div>
+
+      <div class="language-box">
+        <span>OUTPUT</span>
+        <strong>Professional English</strong>
+      </div>
+    </div>
+
+    <section class="mic-area">
+      <button
+        id="micButton"
+        class="mic-button"
+        onclick="toggleRecording()"
+        aria-label="Start voice recording">
+        🎤
+      </button>
+
+      <div id="status" class="status">
+        Click the microphone and start speaking
+      </div>
+    </section>
+
+    <section class="box">
+      <div class="box-title">Your Speech</div>
+
+      <textarea
+        id="speechText"
+        placeholder="Your spoken words will appear here..."></textarea>
+    </section>
+
+    <section class="box">
+      <div class="box-title">English Translation</div>
+
+      <textarea
+        id="englishText"
+        placeholder="English translation will appear here..."
+        readonly></textarea>
+
+      <div class="buttons">
+        <button class="action" onclick="copyEnglish()">
+          Copy English
+        </button>
+
+        <button class="action secondary" onclick="speakEnglish()">
+          🔊 Listen
+        </button>
+
+        <button class="action secondary" onclick="clearAll()">
+          Clear
+        </button>
+      </div>
+    </section>
+
+    <div class="footer">
+      Voice to English Translator
+    </div>
+
+  </main>
+
+<script>
+
+  let recognition = null;
+  let recording = false;
+
+  const micButton = document.getElementById("micButton");
+  const statusText = document.getElementById("status");
+  const speechText = document.getElementById("speechText");
+  const englishText = document.getElementById("englishText");
+
+  /*
+   * Browser speech recognition
+   */
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+
+    statusText.textContent =
+      "Speech recognition is not supported in this browser.";
+
+  } else {
+
+    recognition = new SpeechRecognition();
+
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    /*
+     * Urdu is used as the default recognition language.
+     *
+     * We can later add a language selector for:
+     * Urdu
+     * Hindi
+     * English
+     * Roman Urdu
+     */
+
+    recognition.lang = "ur-PK";
+
+    recognition.onstart = function() {
+
+      recording = true;
+
+      micButton.classList.add("recording");
+
+      micButton.innerHTML = "⏹️";
+
+      statusText.textContent =
+        "Listening... Speak now";
+    };
+
+    recognition.onresult = function(event) {
+
+      let finalText = "";
+      let interimText = "";
+
+      for (
+        let i = event.resultIndex;
+        i < event.results.length;
+        i++
+      ) {
+
+        const transcript =
+          event.results[i][0].transcript;
+
+        if (event.results[i].isFinal) {
+
+          finalText += transcript + " ";
+
+        } else {
+
+          interimText += transcript;
+
+        }
+      }
+
+      if (finalText) {
+
+        speechText.value += finalText;
+
+        translateToEnglish(speechText.value);
+      }
+
+      if (interimText) {
+
+        statusText.textContent =
+          "Listening: " + interimText;
+      }
+    };
+
+    recognition.onerror = function(event) {
+
+      console.error(event.error);
+
+      statusText.textContent =
+        "Microphone error: " + event.error;
+    };
+
+    recognition.onend = function() {
+
+      recording = false;
+
+      micButton.classList.remove("recording");
+
+      micButton.innerHTML = "🎤";
+
+      if (
+        statusText.textContent.startsWith("Listening")
+      ) {
+
+        statusText.textContent =
+          "Click the microphone and start speaking";
+      }
+    };
+  }
+
+
+  function toggleRecording() {
+
+    if (!recognition) {
+      alert(
+        "Please use Google Chrome or another browser that supports speech recognition."
+      );
+      return;
+    }
+
+    if (recording) {
+
+      recognition.stop();
+
+    } else {
+
+      recognition.start();
+    }
+  }
+
+
+  /*
+   * Translation function
+   *
+   * IMPORTANT:
+   * This demo keeps translation separate so an API/backend
+   * can be connected without changing the interface.
+   */
+
+  async function translateToEnglish(text) {
+
+    if (!text.trim()) {
+      return;
+    }
+
+    /*
+     * Temporary basic handling.
+     *
+     * For real Urdu/Roman Urdu -> professional English,
+     * connect this function to an AI translation API/backend.
+     */
+
+    englishText.value =
+      "Translating...";
+
+    try {
+
+      /*
+       * PLACE API REQUEST HERE.
+       *
+       * Example backend endpoint:
+       *
+       * POST /api/translate
+       *
+       * Body:
+       * {
+       *   text: text,
+       *   target: "English"
+       * }
+       */
+
+      const result =
+        await demoTranslate(text);
+
+      englishText.value = result;
+
+    } catch (error) {
+
+      console.error(error);
+
+      englishText.value =
+        "Translation service is not connected yet.";
+    }
+  }
+
+
+  /*
+   * Temporary demo translator.
+   *
+   * This intentionally does not pretend to be a real
+   * Urdu-to-English AI translator.
+   *
+   * We will replace this with the real API/backend.
+   */
+
+  async function demoTranslate(text) {
+
+    return text;
+  }
+
+
+  async function copyEnglish() {
+
+    const text =
+      englishText.value.trim();
+
+    if (!text) {
+
+      alert("There is no English text to copy.");
+
+      return;
+    }
+
+    try {
+
+      await navigator.clipboard.writeText(text);
+
+      alert("English text copied.");
+
+    } catch (error) {
+
+      englishText.select();
+
+      document.execCommand("copy");
+
+      alert("English text copied.");
+    }
+  }
+
+
+  function speakEnglish() {
+
+    const text =
+      englishText.value.trim();
+
+    if (!text) {
+
+      alert("There is no English text to read.");
+
+      return;
+    }
+
+    if (!("speechSynthesis" in window)) {
+
+      alert(
+        "Text-to-speech is not supported in this browser."
+      );
+
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const voice =
+      new SpeechSynthesisUtterance(text);
+
+    voice.lang = "en-US";
+
+    voice.rate = 0.95;
+
+    voice.pitch = 1;
+
+    window.speechSynthesis.speak(voice);
+  }
+
+
+  function clearAll() {
+
+    speechText.value = "";
+
+    englishText.value = "";
+
+    statusText.textContent =
+      "Click the microphone and start speaking";
+  }
+
+</script>
+
+</body>
+</html>
+```
