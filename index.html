@@ -2,48 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Voice To English</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Email Reply Assistant</title>
 
   <meta
     name="description"
-    content="Speak in Urdu, Roman Urdu or Hindi and convert your speech into professional English."
+    content="Voice powered professional email reply assistant."
   >
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      min-height: 100vh;
+      margin: 0;
+      font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+
       background:
-        radial-gradient(circle at top left, rgba(212, 175, 55, 0.14), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(0, 110, 255, 0.12), transparent 35%),
-        #07111f;
+        radial-gradient(
+          circle at top right,
+          rgba(212, 175, 55, 0.14),
+          transparent 30%
+        ),
+        linear-gradient(
+          135deg,
+          #07111f,
+          #0c1728 55%,
+          #050b14
+        );
+
       color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 25px;
+      min-height: 100vh;
     }
 
     .container {
-      width: 100%;
-      max-width: 900px;
-    }
-
-    .card {
-      background: rgba(12, 25, 42, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 24px;
-      padding: 35px;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(12px);
+      width: min(1100px, 94%);
+      margin: auto;
+      padding: 35px 0 50px;
     }
 
     .header {
@@ -51,231 +56,280 @@
       margin-bottom: 30px;
     }
 
-    .logo {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 18px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      background: linear-gradient(135deg, #d4af37, #f5d778);
-      color: #07111f;
-      box-shadow: 0 10px 35px rgba(212, 175, 55, 0.25);
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 1px solid rgba(212,175,55,.45);
+      border-radius: 30px;
+      color: #e7c766;
+      font-size: 13px;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
     }
 
     h1 {
-      font-size: 38px;
-      margin-bottom: 10px;
-      background: linear-gradient(90deg, #ffffff, #d4af37);
+      margin: 0;
+      font-size: clamp(32px, 6vw, 56px);
+      line-height: 1.05;
+
+      background:
+        linear-gradient(
+          90deg,
+          #ffffff,
+          #e6c45d
+        );
+
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .subtitle {
-      color: #aeb9c8;
+      margin: 14px auto 0;
+      max-width: 720px;
+      color: #aeb9c9;
       font-size: 16px;
       line-height: 1.6;
     }
 
-    .language-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .card {
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18, 32, 52, .94),
+          rgba(8, 17, 29, .94)
+        );
+
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 22px;
+      padding: 24px;
+      margin-bottom: 22px;
+
+      box-shadow:
+        0 25px 70px rgba(0,0,0,.28);
+    }
+
+    .card-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       gap: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
     }
 
-    .language-box {
-      background: rgba(255, 255, 255, 0.045);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 15px;
+    .card-title h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #f1d273;
     }
 
-    .language-label {
-      color: #8997aa;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 7px;
-    }
+    .step {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
 
-    .language-value {
-      color: #ffffff;
-      font-weight: 600;
-    }
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    .section {
-      margin-top: 20px;
-    }
-
-    .section-title {
-      color: #d4af37;
-      font-size: 14px;
+      background: rgba(212,175,55,.13);
+      border: 1px solid rgba(212,175,55,.4);
+      color: #e7c766;
       font-weight: bold;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      flex-shrink: 0;
     }
 
     textarea {
       width: 100%;
-      min-height: 150px;
       resize: vertical;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      background: #081522;
+      min-height: 190px;
+
+      padding: 17px;
+
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.1);
+
+      background: #07111e;
       color: #ffffff;
-      padding: 18px;
-      font-size: 17px;
+
+      font-size: 16px;
       line-height: 1.6;
+
       outline: none;
     }
 
     textarea:focus {
-      border-color: rgba(212, 175, 55, 0.65);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+      border-color: rgba(212,175,55,.65);
+      box-shadow:
+        0 0 0 3px rgba(212,175,55,.08);
     }
 
     textarea::placeholder {
-      color: #637286;
+      color: #6f7d90;
     }
 
     .voice-area {
-      text-align: center;
-      margin: 25px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    .mic-button {
-      width: 90px;
-      height: 90px;
-      border: none;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #d4af37, #f3d46d);
-      color: #07111f;
-      font-size: 35px;
+    .voice-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 19px;
+
+      font-size: 15px;
+      font-weight: 600;
+
       cursor: pointer;
-      box-shadow: 0 12px 35px rgba(212, 175, 55, 0.25);
-      transition: 0.2s ease;
+      transition: .2s ease;
     }
 
-    .mic-button:hover {
-      transform: translateY(-2px) scale(1.03);
+    button:hover {
+      transform: translateY(-1px);
     }
 
-    .mic-button:active {
-      transform: scale(0.97);
+    .voice-btn {
+      background:
+        linear-gradient(
+          135deg,
+          #d4af37,
+          #f0d778
+        );
+
+      color: #101722;
     }
 
-    .mic-button.recording {
-      animation: pulse 1.2s infinite;
-      background: #e05252;
+    .voice-btn.recording {
+      background: #c94a4a;
       color: #ffffff;
+      animation: pulse 1.2s infinite;
     }
 
     @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(224, 82, 82, 0.5);
-      }
-
-      70% {
-        box-shadow: 0 0 0 25px rgba(224, 82, 82, 0);
-      }
-
-      100% {
-        box-shadow: 0 0 0 0 rgba(224, 82, 82, 0);
+      50% {
+        box-shadow:
+          0 0 0 9px rgba(201,74,74,.12);
       }
     }
 
-    .mic-text {
-      margin-top: 12px;
-      color: #aeb9c8;
-      font-size: 14px;
+    .secondary {
+      background: #162438;
+      color: #dce5f0;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .generate {
+      width: 100%;
+      padding: 16px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #d4af37,
+          #f0d778
+        );
+
+      color: #101722;
+      font-size: 17px;
+    }
+
+    .generate:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .status {
       min-height: 24px;
+      margin-top: 14px;
       text-align: center;
-      margin: 10px 0;
-      color: #d4af37;
+      color: #aeb9c9;
       font-size: 14px;
     }
 
-    .status.error {
-      color: #ff7777;
+    .error {
+      color: #ff8d8d;
     }
 
-    .status.success {
-      color: #67d89a;
+    .success {
+      color: #88e2ae;
     }
 
-    .button-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 15px;
-      flex-wrap: wrap;
+    .subject {
+      margin-bottom: 15px;
     }
 
-    button.action {
-      flex: 1;
-      min-width: 130px;
-      padding: 14px 18px;
+    .subject-label {
+      display: block;
+      color: #9baabd;
+      font-size: 13px;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    .subject-box {
+      width: 100%;
+      padding: 15px;
+
+      background: #07111e;
+      border: 1px solid rgba(255,255,255,.1);
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      background: rgba(255, 255, 255, 0.06);
+
       color: #ffffff;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.2s ease;
+      font-size: 16px;
+      outline: none;
     }
 
-    button.action:hover {
-      background: rgba(255, 255, 255, 0.11);
+    .output {
+      min-height: 310px;
     }
 
-    button.primary {
-      background: linear-gradient(135deg, #d4af37, #f3d46d);
-      color: #07111f;
-      border: none;
+    .bottom-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
     }
 
-    button.primary:hover {
-      opacity: 0.92;
+    .tip {
+      margin-top: 12px;
+      color: #7e8da2;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .footer {
       text-align: center;
-      color: #637286;
-      font-size: 12px;
+      color: #68788c;
+      font-size: 13px;
       margin-top: 25px;
     }
 
     @media (max-width: 650px) {
-      body {
-        padding: 12px;
+      .container {
+        padding-top: 22px;
       }
 
       .card {
-        padding: 22px;
-        border-radius: 18px;
-      }
-
-      h1 {
-        font-size: 30px;
-      }
-
-      .language-row {
-        grid-template-columns: 1fr;
+        padding: 17px;
+        border-radius: 17px;
       }
 
       textarea {
-        min-height: 130px;
+        min-height: 170px;
       }
 
-      .mic-button {
-        width: 80px;
-        height: 80px;
+      .voice-controls button,
+      .bottom-actions button {
+        flex: 1;
       }
     }
   </style>
@@ -283,170 +337,242 @@
 
 <body>
 
-  <div class="container">
+  <main class="container">
 
-    <div class="card">
+    <header class="header">
 
-      <div class="header">
-        <div class="logo">🎤</div>
-
-        <h1>Voice To English</h1>
-
-        <p class="subtitle">
-          Speak naturally in Urdu, Roman Urdu or Hindi
-          and convert your speech into professional English.
-        </p>
+      <div class="badge">
+        AI EMAIL REPLY ASSISTANT
       </div>
 
+      <h1>
+        Voice To Professional Email
+      </h1>
 
-      <div class="language-row">
+      <p class="subtitle">
+        Read the received email, speak your reply in
+        Urdu, Roman Urdu, Hindi or English, and generate
+        a complete professional English email.
+      </p>
 
-        <div class="language-box">
-          <div class="language-label">Input Language</div>
-          <div class="language-value">
-            Urdu / Roman Urdu / Hindi
-          </div>
+    </header>
+
+
+    <!-- RECEIVED EMAIL -->
+
+    <section class="card">
+
+      <div class="card-title">
+
+        <div>
+          <h2>
+            Received Email
+          </h2>
         </div>
 
-        <div class="language-box">
-          <div class="language-label">Output</div>
-          <div class="language-value">
-            Professional English
-          </div>
+        <div class="step">
+          1
         </div>
-
-      </div>
-
-
-      <div class="section">
-
-        <div class="section-title">
-          Your Speech / Text
-        </div>
-
-        <textarea
-          id="inputText"
-          placeholder="Press the microphone and speak here..."
-        ></textarea>
 
       </div>
 
+      <textarea
+        id="emailInput"
+        placeholder="Paste the complete received email here..."
+      ></textarea>
+
+      <div class="tip">
+        Paste the email you received. The AI will understand
+        the email before preparing your reply.
+      </div>
+
+    </section>
+
+
+    <!-- VOICE REPLY -->
+
+    <section class="card">
+
+      <div class="card-title">
+
+        <div>
+          <h2>
+            Your Reply
+          </h2>
+        </div>
+
+        <div class="step">
+          2
+        </div>
+
+      </div>
 
       <div class="voice-area">
 
-        <button
-          id="micButton"
-          class="mic-button"
-          type="button"
-          title="Start speaking"
-        >
-          🎤
-        </button>
+        <textarea
+          id="voiceInput"
+          placeholder="Speak your reply in Urdu, Roman Urdu, Hindi or English..."
+        ></textarea>
 
-        <div
-          id="micText"
-          class="mic-text"
-        >
-          Click microphone and start speaking
+        <div class="voice-controls">
+
+          <button
+            id="voiceButton"
+            class="voice-btn"
+            type="button"
+          >
+            🎤 Start Voice
+          </button>
+
+          <button
+            id="clearVoiceButton"
+            class="secondary"
+            type="button"
+          >
+            Clear Voice
+          </button>
+
         </div>
 
       </div>
 
+      <div class="tip">
+        Example: "Unko batao shipment kal deliver ho jayegi
+        aur delivery ke baad POD bhi share kar denge."
+      </div>
+
+    </section>
+
+
+    <!-- GENERATE -->
+
+    <section class="card">
+
+      <div class="step" style="margin-bottom:15px;">
+        3
+      </div>
+
+      <button
+        id="generateButton"
+        class="generate"
+        type="button"
+      >
+        ✨ Generate Professional Email
+      </button>
 
       <div
         id="status"
         class="status"
       ></div>
 
+    </section>
 
-      <div class="button-row">
 
-        <button
-          id="translateButton"
-          class="action primary"
-          type="button"
+    <!-- FINAL EMAIL -->
+
+    <section class="card">
+
+      <div class="card-title">
+
+        <div>
+          <h2>
+            Final Email
+          </h2>
+        </div>
+
+        <div class="step">
+          4
+        </div>
+
+      </div>
+
+      <div class="subject">
+
+        <span class="subject-label">
+          Subject
+        </span>
+
+        <input
+          id="subjectOutput"
+          class="subject-box"
+          type="text"
+          placeholder="Email subject will appear here..."
+          readonly
         >
-          Translate to English
-        </button>
+
+      </div>
+
+      <textarea
+        id="emailOutput"
+        class="output"
+        placeholder="Your complete professional email will appear here..."
+        readonly
+      ></textarea>
+
+      <div class="bottom-actions">
 
         <button
           id="copyButton"
-          class="action"
+          class="secondary"
           type="button"
         >
-          Copy
+          📋 Copy Email
         </button>
 
         <button
           id="listenButton"
-          class="action"
+          class="secondary"
           type="button"
         >
           🔊 Listen
         </button>
 
         <button
-          id="clearButton"
-          class="action"
+          id="clearAllButton"
+          class="secondary"
           type="button"
         >
-          Clear
+          🗑 Clear All
         </button>
 
       </div>
 
-
-      <div class="section">
-
-        <div class="section-title">
-          Professional English
-        </div>
-
-        <textarea
-          id="outputText"
-          placeholder="Your professional English translation will appear here..."
-          readonly
-        ></textarea>
-
-      </div>
+    </section>
 
 
-      <div class="footer">
-        Voice To English
-      </div>
-
+    <div class="footer">
+      Professional Email Assistant
     </div>
 
-  </div>
+  </main>
 
 
   <script>
 
-    /*
-     * Google Apps Script Web App
-     * Your URL is already connected here.
-     */
     const API_URL =
       "https://script.google.com/macros/s/AKfycbz3B_vJ9IinNwwhb4CYisaZ4uU0ROhttILvNSuDPvAhNJcndgEdFCV1brRC222L5bA-/exec";
 
 
-    const inputText =
-      document.getElementById("inputText");
+    const emailInput =
+      document.getElementById("emailInput");
 
-    const outputText =
-      document.getElementById("outputText");
+    const voiceInput =
+      document.getElementById("voiceInput");
 
-    const micButton =
-      document.getElementById("micButton");
+    const voiceButton =
+      document.getElementById("voiceButton");
 
-    const micText =
-      document.getElementById("micText");
+    const clearVoiceButton =
+      document.getElementById("clearVoiceButton");
 
-    const statusBox =
-      document.getElementById("status");
+    const generateButton =
+      document.getElementById("generateButton");
 
-    const translateButton =
-      document.getElementById("translateButton");
+    const subjectOutput =
+      document.getElementById("subjectOutput");
+
+    const emailOutput =
+      document.getElementById("emailOutput");
 
     const copyButton =
       document.getElementById("copyButton");
@@ -454,178 +580,187 @@
     const listenButton =
       document.getElementById("listenButton");
 
-    const clearButton =
-      document.getElementById("clearButton");
+    const clearAllButton =
+      document.getElementById("clearAllButton");
+
+    const status =
+      document.getElementById("status");
+
+
+    let recognition = null;
+    let isRecording = false;
 
 
     /*
-     * Speech Recognition
+     * VOICE RECOGNITION
      */
 
     const SpeechRecognition =
       window.SpeechRecognition ||
       window.webkitSpeechRecognition;
 
-    let recognition = null;
-    let isRecording = false;
-
 
     if (SpeechRecognition) {
 
-      recognition = new SpeechRecognition();
-
-      recognition.lang = "ur-PK";
+      recognition =
+        new SpeechRecognition();
 
       recognition.continuous = true;
-
       recognition.interimResults = true;
+
+      /*
+       * Urdu is useful for Urdu speakers.
+       * Browser will still capture mixed speech.
+       */
+      recognition.lang = "ur-PK";
 
 
       recognition.onstart = function() {
 
         isRecording = true;
 
-        micButton.classList.add("recording");
+        voiceButton.textContent =
+          "⏹ Stop Voice";
 
-        micButton.textContent = "⏹";
-
-        micText.textContent =
-          "Listening... Speak now";
-
-        setStatus(
-          "Listening...",
-          ""
+        voiceButton.classList.add(
+          "recording"
         );
+
+        status.textContent =
+          "Listening... speak your reply.";
+
+        status.className =
+          "status";
+
       };
 
 
-      recognition.onresult = function(event) {
+      recognition.onresult =
+        function(event) {
 
-        let finalText = "";
+          let finalText = "";
+          let interimText = "";
 
-        let interimText = "";
+          for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+          ) {
 
-        for (
-          let i = event.resultIndex;
-          i < event.results.length;
-          i++
-        ) {
+            const transcript =
+              event.results[i][0].transcript;
 
-          const transcript =
-            event.results[i][0].transcript;
-
-          if (event.results[i].isFinal) {
-
-            finalText += transcript + " ";
-
-          } else {
-
-            interimText += transcript;
+            if (
+              event.results[i].isFinal
+            ) {
+              finalText += transcript + " ";
+            } else {
+              interimText += transcript;
+            }
 
           }
 
-        }
+          if (finalText) {
+
+            voiceInput.value +=
+              finalText;
+
+          }
+
+          if (interimText) {
+
+            status.textContent =
+              "Listening: " + interimText;
+
+          }
+
+        };
 
 
-        if (finalText.trim()) {
+      recognition.onerror =
+        function(event) {
 
-          inputText.value =
-            (
-              inputText.value +
-              " " +
-              finalText
-            ).trim();
+          status.textContent =
+            "Voice error: " +
+            event.error;
 
-        }
+          status.className =
+            "status error";
 
+          stopRecording();
 
-        if (interimText) {
-
-          micText.textContent =
-            interimText;
-
-        }
-
-      };
+        };
 
 
-      recognition.onerror = function(event) {
+      recognition.onend =
+        function() {
 
-        console.error(
-          "Speech recognition error:",
-          event.error
-        );
+          if (isRecording) {
 
-        if (event.error === "not-allowed") {
+            try {
+              recognition.start();
+            } catch (error) {
+              stopRecording();
+            }
 
-          setStatus(
-            "Microphone permission was denied.",
-            "error"
-          );
+          }
 
-        } else if (event.error === "no-speech") {
-
-          setStatus(
-            "No speech detected. Please try again.",
-            "error"
-          );
-
-        } else {
-
-          setStatus(
-            "Microphone error: " + event.error,
-            "error"
-          );
-
-        }
-
-      };
-
-
-      recognition.onend = function() {
-
-        isRecording = false;
-
-        micButton.classList.remove("recording");
-
-        micButton.textContent = "🎤";
-
-        micText.textContent =
-          "Click microphone and start speaking";
-
-      };
+        };
 
     } else {
 
-      micButton.disabled = true;
+      voiceButton.disabled = true;
 
-      micButton.style.opacity = "0.5";
+      voiceButton.textContent =
+        "🎤 Voice Not Supported";
 
-      micText.textContent =
-        "Speech recognition is not supported in this browser.";
+      status.textContent =
+        "Please use Google Chrome for voice input.";
+
+      status.className =
+        "status error";
+    }
+
+
+    function stopRecording() {
+
+      isRecording = false;
+
+      voiceButton.textContent =
+        "🎤 Start Voice";
+
+      voiceButton.classList.remove(
+        "recording"
+      );
+
+      if (recognition) {
+
+        try {
+          recognition.stop();
+        } catch (error) {}
+
+      }
 
     }
 
 
-    micButton.addEventListener(
+    voiceButton.addEventListener(
       "click",
       function() {
 
         if (!recognition) {
-
-          setStatus(
-            "Please use Google Chrome for voice input.",
-            "error"
-          );
-
           return;
-
         }
-
 
         if (isRecording) {
 
-          recognition.stop();
+          stopRecording();
+
+          status.textContent =
+            "Voice stopped.";
+
+          status.className =
+            "status";
 
         } else {
 
@@ -635,7 +770,11 @@
 
           } catch (error) {
 
-            console.error(error);
+            status.textContent =
+              "Could not start microphone.";
+
+            status.className =
+              "status error";
 
           }
 
@@ -645,160 +784,211 @@
     );
 
 
-    /*
-     * Translate
-     */
-
-    translateButton.addEventListener(
+    clearVoiceButton.addEventListener(
       "click",
-      translateText
+      function() {
+
+        voiceInput.value = "";
+
+        status.textContent = "";
+
+        if (isRecording) {
+          stopRecording();
+        }
+
+      }
     );
 
 
-    async function translateText() {
+    /*
+     * GENERATE EMAIL
+     */
 
-      const text =
-        inputText.value.trim();
+    generateButton.addEventListener(
+      "click",
+      async function() {
 
+        const receivedEmail =
+          emailInput.value.trim();
 
-      if (!text) {
-
-        setStatus(
-          "Please speak or enter some text first.",
-          "error"
-        );
-
-        return;
-
-      }
+        const reply =
+          voiceInput.value.trim();
 
 
-      translateButton.disabled = true;
+        if (!receivedEmail) {
 
-      translateButton.textContent =
-        "Translating...";
+          status.textContent =
+            "Please paste the received email first.";
 
-      setStatus(
-        "Please wait...",
-        ""
-      );
+          status.className =
+            "status error";
 
+          emailInput.focus();
 
-      try {
-
-        const response =
-          await fetch(
-            API_URL,
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "text/plain;charset=utf-8"
-              },
-
-              body: JSON.stringify({
-                text: text
-              })
-            }
-          );
-
-
-        const result =
-          await response.json();
-
-
-        if (!result.success) {
-
-          throw new Error(
-            result.error ||
-            "Translation failed."
-          );
-
+          return;
         }
 
 
-        outputText.value =
-          result.english || "";
+        if (!reply) {
+
+          status.textContent =
+            "Please give your reply by voice or type it.";
+
+          status.className =
+            "status error";
+
+          voiceInput.focus();
+
+          return;
+        }
 
 
-        setStatus(
-          "Translation completed.",
-          "success"
-        );
+        if (isRecording) {
+          stopRecording();
+        }
 
 
-      } catch (error) {
+        generateButton.disabled = true;
 
-        console.error(
-          "Translation error:",
-          error
-        );
+        generateButton.textContent =
+          "⏳ Creating Professional Email...";
+
+        status.textContent =
+          "AI is reading the email and preparing your reply...";
+
+        status.className =
+          "status";
 
 
-        setStatus(
-          "Translation failed: " +
-          error.message,
-          "error"
-        );
+        subjectOutput.value = "";
+        emailOutput.value = "";
 
-      } finally {
 
-        translateButton.disabled = false;
+        try {
 
-        translateButton.textContent =
-          "Translate to English";
+          const response =
+            await fetch(
+              API_URL,
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "text/plain;charset=utf-8"
+                },
+
+                body: JSON.stringify({
+                  emailText: receivedEmail,
+                  voiceReply: reply
+                })
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          if (!data.success) {
+
+            throw new Error(
+              data.error ||
+              "Email generation failed."
+            );
+
+          }
+
+
+          subjectOutput.value =
+            data.subject || "";
+
+          emailOutput.value =
+            data.email || "";
+
+
+          status.textContent =
+            "Professional email created successfully.";
+
+          status.className =
+            "status success";
+
+
+        } catch (error) {
+
+          status.textContent =
+            "Error: " +
+            error.message;
+
+          status.className =
+            "status error";
+
+        } finally {
+
+          generateButton.disabled = false;
+
+          generateButton.textContent =
+            "✨ Generate Professional Email";
+
+        }
 
       }
-
-    }
+    );
 
 
     /*
-     * Copy
+     * COPY EMAIL
      */
 
     copyButton.addEventListener(
       "click",
       async function() {
 
-        const text =
-          outputText.value.trim();
+        const subject =
+          subjectOutput.value.trim();
+
+        const body =
+          emailOutput.value.trim();
 
 
-        if (!text) {
+        if (!body) {
 
-          setStatus(
-            "There is no English text to copy.",
-            "error"
-          );
+          status.textContent =
+            "There is no email to copy.";
+
+          status.className =
+            "status error";
 
           return;
 
         }
 
 
+        const completeEmail =
+          "Subject: " +
+          subject +
+          "\n\n" +
+          body;
+
+
         try {
 
           await navigator.clipboard.writeText(
-            text
+            completeEmail
           );
 
-          setStatus(
-            "English text copied.",
-            "success"
-          );
+          status.textContent =
+            "Email copied successfully.";
+
+          status.className =
+            "status success";
 
         } catch (error) {
 
-          outputText.select();
+          status.textContent =
+            "Could not copy the email.";
 
-          document.execCommand("copy");
-
-          setStatus(
-            "English text copied.",
-            "success"
-          );
+          status.className =
+            "status error";
 
         }
 
@@ -807,35 +997,27 @@
 
 
     /*
-     * Listen to English
+     * LISTEN
      */
 
     listenButton.addEventListener(
       "click",
       function() {
 
-        const text =
-          outputText.value.trim();
+        const subject =
+          subjectOutput.value.trim();
+
+        const body =
+          emailOutput.value.trim();
 
 
-        if (!text) {
+        if (!body) {
 
-          setStatus(
-            "There is no English text to listen to.",
-            "error"
-          );
+          status.textContent =
+            "There is no email to listen to.";
 
-          return;
-
-        }
-
-
-        if (!("speechSynthesis" in window)) {
-
-          setStatus(
-            "Text-to-speech is not supported.",
-            "error"
-          );
+          status.className =
+            "status error";
 
           return;
 
@@ -845,18 +1027,29 @@
         window.speechSynthesis.cancel();
 
 
-        const speech =
-          new SpeechSynthesisUtterance(text);
+        const textToRead =
+          subject
+            ? "Subject. " +
+              subject +
+              ". " +
+              body
+            : body;
 
-        speech.lang = "en-US";
 
-        speech.rate = 0.95;
+        const utterance =
+          new SpeechSynthesisUtterance(
+            textToRead
+          );
 
-        speech.pitch = 1;
+        utterance.lang = "en-US";
+
+        utterance.rate = 0.95;
+
+        utterance.pitch = 1;
 
 
         window.speechSynthesis.speak(
-          speech
+          utterance
         );
 
       }
@@ -864,48 +1057,28 @@
 
 
     /*
-     * Clear
+     * CLEAR ALL
      */
 
-    clearButton.addEventListener(
+    clearAllButton.addEventListener(
       "click",
       function() {
 
-        inputText.value = "";
+        emailInput.value = "";
+        voiceInput.value = "";
+        subjectOutput.value = "";
+        emailOutput.value = "";
 
-        outputText.value = "";
+        status.textContent = "";
 
-        setStatus("", "");
+        window.speechSynthesis.cancel();
 
-        micText.textContent =
-          "Click microphone and start speaking";
+        if (isRecording) {
+          stopRecording();
+        }
 
       }
     );
-
-
-    /*
-     * Status helper
-     */
-
-    function setStatus(
-      message,
-      type
-    ) {
-
-      statusBox.textContent =
-        message;
-
-      statusBox.className =
-        "status";
-
-      if (type) {
-
-        statusBox.classList.add(type);
-
-      }
-
-    }
 
   </script>
 
